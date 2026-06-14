@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Me perdonas? My brother</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:url('Joss.jpg') center center/cover no-repeat;
+    position:relative;
+}
+
+/* Oscurecer un poco el fondo */
+body::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    backdrop-filter:blur(2px);
+}
+
+.container{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    padding:40px;
+    width:90%;
+    max-width:650px;
+
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:25px;
+
+    box-shadow:
+    0 8px 32px rgba(0,0,0,.2);
+
+    animation:fadeIn 1.2s ease;
+}
+
+h1{
+    color:white;
+    font-size:3rem;
+    margin-bottom:15px;
+    text-shadow:2px 2px 10px rgba(0,0,0,.4);
+}
+
+p{
+    color:white;
+    font-size:1.2rem;
+    margin-bottom:30px;
+}
+
+.buttons{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    padding:15px 35px;
+    border-radius:50px;
+    font-size:1.1rem;
+    cursor:pointer;
+    transition:.3s;
+    font-weight:bold;
+}
+
+#yesBtn{
+    background:#ff4d8d;
+    color:white;
+}
+
+#yesBtn:hover{
+    transform:scale(1.1);
+}
+
+#noBtn{
+    background:white;
+    color:#ff4d8d;
+    position:relative;
+}
+
+.heart{
+    position:fixed;
+    bottom:-20px;
+    font-size:25px;
+    animation:floatUp linear forwards;
+    pointer-events:none;
+    z-index:999;
+}
+
+@keyframes floatUp{
+    from{
+        transform:translateY(0);
+        opacity:1;
+    }
+    to{
+        transform:translateY(-110vh);
+        opacity:0;
+    }
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.modal-content{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+    width:90%;
+    max-width:500px;
+    animation:fadeIn .5s ease;
+}
+
+.modal-content h2{
+    color:#ff4d8d;
+    margin-bottom:15px;
+}
+
+.modal-content img{
+    width:250px;
+    max-width:100%;
+}
+
+.hearts-bg{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+}
+</style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+
+<div class="container">
+
+    <h1 id="mainTitle">¿Me perdonas Leyni? 💖</h1>
+
+    <p id="mainText">
+        Eres una persona muy especial para mí y espero que puedas perdonarme. 💕
+    </p>
+
+    <div class="buttons">
+        <button id="yesBtn">Sí </button>
+        <button id="noBtn">No </button>
+    </div>
+
+</div>
+
+<div class="modal" id="modal">
+
+    <div class="modal-content">
+
+        <h2>¡Gracias por perdonarme Tq, Claro que si somos muy buenos amigos! </h2>
+
+        <img
+        src="https://www.funny-emoticons.com/files/funny-animals/hello-kitty-emoticons/983-hello-kitty-hello.png"
+        alt="Hello Kitty">
+
+    </div>
+
+</div>
+
+<audio id="music">
+    <source src="Romantic music sound effect.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const modal = document.getElementById("modal");
+const music = document.getElementById("music");
+
+function moveButton(){
+
+    const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+}
+
+noBtn.addEventListener("mouseenter", moveButton);
+
+noBtn.addEventListener("touchstart", function(e){
+    e.preventDefault();
+    moveButton();
+});
+
+document.addEventListener("mousemove", (e)=>{
+
+    const rect = noBtn.getBoundingClientRect();
+
+    const distance =
+    Math.hypot(
+        e.clientX - (rect.left + rect.width/2),
+        e.clientY - (rect.top + rect.height/2)
+    );
+
+    if(distance < 120){
+        moveButton();
+    }
+
+});
+
+function createHeart(){
+
+    const heart = document.createElement("div");
+
+    heart.classList.add("heart");
+    heart.innerHTML = ["💖","💕","💗","💘","🌸"][Math.floor(Math.random()*5)];
+
+    heart.style.left = Math.random()*100 + "vw";
+
+    heart.style.animationDuration =
+        (Math.random()*3 + 3) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(()=>{
+        heart.remove();
+    },6000);
+}
+
+setInterval(createHeart,500);
+
+yesBtn.addEventListener("click", ()=>{
+
+    document.getElementById("mainTitle").innerHTML =
+    "Gracias por perdonarme. Te prometo que haré las cosas mejor. ";
+
+    document.getElementById("mainText").innerHTML =
+    "Te quiero muchísimo ";
+
+    modal.style.display = "flex";
+
+    music.play();
+
+    for(let i=0;i<50;i++){
+
+        setTimeout(()=>{
+            createHeart();
+        },i*100);
+
+    }
+
+});
+
+modal.addEventListener("click",()=>{
+    modal.style.display="none";
+});
+
+</script>
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAl5iDr2yvjmrg9ZMl9pbdhPzJGwr-H0IU",
+        authDomain: "joss-fc01a.firebaseapp.com",
+        projectId: "joss-fc01a",
+        storageBucket: "joss-fc01a.firebasestorage.app",
+        messagingSenderId: "348530102184",
+        appId: "1:348530102184:web:360f72bbc6945dd253579d"
+    };
+
+  // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+</script>
+
+</body>
+</html>
